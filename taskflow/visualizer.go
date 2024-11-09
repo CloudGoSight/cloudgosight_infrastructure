@@ -1,0 +1,112 @@
+package taskflow
+
+//
+//import (
+//	"fmt"
+//	"github.com/goccy/go-graphviz/cgraph"
+//	"io"
+//)
+//
+//type visualizer struct {
+//	root *cgraph.Graph
+//}
+//
+//func (v *visualizer) visualizeG(gv *graphviz.Graphviz, g *eGraph, parentG *cgraph.Graph) error {
+//	nodes, err := g.topologicalSort()
+//	if err != nil {
+//		return fmt.Errorf("graph %v topological sort -> %w", g.name, err)
+//	}
+//	vGraph := parentG
+//	if vGraph == nil {
+//		var err error
+//		vGraph, err = gv.Graph(graphviz.Directed, graphviz.Name(g.name))
+//		if err != nil {
+//			return fmt.Errorf("make graph -> %w", err)
+//		}
+//		vGraph.SetRankDir(cgraph.LRRank)
+//		v.root = vGraph
+//	}
+//
+//	nodeMap := make(map[string]*cgraph.Node)
+//
+//	for _, node := range g.nodes {
+//		switch p := node.ptr.(type) {
+//		case *Static:
+//			vNode, err := vGraph.CreateNode(node.name)
+//			if err != nil {
+//				return fmt.Errorf("add node %v -> %w", node.name, err)
+//			}
+//			nodeMap[node.name] = vNode
+//		case *Condition:
+//			vNode, err := vGraph.CreateNode(node.name)
+//			if err != nil {
+//				return fmt.Errorf("add node %v -> %w", node.name, err)
+//			}
+//			vNode.SetShape(cgraph.DiamondShape)
+//			vNode.SetColor("green")
+//			nodeMap[node.name] = vNode
+//		case *Subflow:
+//			vSubGraph := vGraph.SubGraph("cluster_"+node.name, 1)
+//			vSubGraph.SetLabel(node.name)
+//			vSubGraph.SetStyle(cgraph.DashedGraphStyle)
+//			vSubGraph.SetBackgroundColor("#F5F5F5")
+//			vSubGraph.SetRankDir(cgraph.LRRank)
+//
+//			if p.instancelize() != nil || v.visualizeG(gv, p.g, vSubGraph) != nil {
+//				vNode, err := vGraph.CreateNode("unvisualized_subflow_" + p.g.name)
+//				if err != nil {
+//					return fmt.Errorf("add node %v -> %w", node.name, err)
+//				}
+//				vNode.SetColor("red")
+//				vNode.SetComment("cannot visualize due to instancelize panic or failed")
+//				nodeMap[node.name] = vNode
+//			} else {
+//				dummy, _ := vSubGraph.CreateNode(p.g.name)
+//				dummy.SetShape(cgraph.PointShape)
+//				nodeMap[node.name] = dummy
+//				// dummy.SetStyle(cgraph.NodeStyle("invis"))
+//				// vSubGraph.SetNewRank(true)
+//			}
+//		}
+//	}
+//
+//	for _, node := range nodes {
+//		for idx, deps := range node.successors {
+//			// fmt.Printf("add edge %v - %v\n", deps.name, node.name)
+//			label := ""
+//			style := cgraph.SolidEdgeStyle
+//			if _, ok := node.ptr.(*Condition); ok {
+//				label = fmt.Sprintf("%d", idx)
+//				style = cgraph.DashedEdgeStyle
+//			}
+//
+//			edge, err := vGraph.CreateEdge(label, nodeMap[node.name], nodeMap[deps.name])
+//			if err != nil {
+//				return fmt.Errorf("add edge %v - %v -> %w", deps.name, node.name, err)
+//			}
+//			edge.SetLabel(label)
+//			edge.SetStyle(style)
+//
+//		}
+//	}
+//
+//	return nil
+//}
+//
+//// Visualize generate raw dag text in dot format and write to writer
+//func Visualize(tf *TaskFlow, writer io.Writer) error {
+//	gv := graphviz.New()
+//	defer gv.Close()
+//	v := visualizer{}
+//	err := v.visualizeG(gv, tf.graph, nil)
+//	if err != nil {
+//		return fmt.Errorf("graph %v topological sort -> %w", tf.graph.name, err)
+//	}
+//
+//	if err := gv.Render(v.root, graphviz.XDOT, writer); err != nil {
+//		return fmt.Errorf("render -> %w", err)
+//	}
+//
+//	v.root.Close()
+//	return nil
+//}
